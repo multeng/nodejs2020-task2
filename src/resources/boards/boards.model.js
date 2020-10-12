@@ -3,16 +3,16 @@ const uuid = require('uuid');
 class Board {
   constructor({
     id = uuid(),
-    title = 'Top board',
+    title = 'Board title',
     columns = [
       {
         id: uuid(),
-        title: 'In Progress',
+        title: 'Column',
         order: 1
       },
       {
         id: uuid(),
-        title: 'Finish',
+        title: 'Column',
         order: 2
       }
     ]

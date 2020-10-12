@@ -3,6 +3,7 @@ const Board = require('../resources/boards/boards.model');
 
 const UsersDB = [];
 const BoardsDB = [];
+let TasksDB = [];
 
 UsersDB.push(new User(), new User(), new User());
 BoardsDB.push(new Board(), new Board(), new Board());
@@ -25,6 +26,9 @@ const deleteUser = async id => {
   if (idx !== -1) {
     UsersDB.splice(idx, 1);
   }
+  TasksDB.map(el => {
+    if (el.userId === id) el.userId = null;
+  });
 };
 
 const updateUser = async user => {
@@ -55,6 +59,7 @@ const deleteBoard = async id => {
   if (idx !== -1) {
     BoardsDB.splice(idx, 1);
   }
+  TasksDB = TasksDB.filter(el => el.boardId !== id);
 };
 
 const updateBoard = async board => {
@@ -64,6 +69,46 @@ const updateBoard = async board => {
   } else {
     BoardsDB[idx] = new Board(board);
     return BoardsDB[idx];
+  }
+};
+
+// tasks
+
+const getAllTasks = async id => TasksDB.filter(el => el.boardId === id);
+
+const getTask = async (boardId, taskId) =>
+  TasksDB.slice().filter(el => el.id === taskId && el.boardId === boardId)[0];
+
+const createTask = async task => {
+  TasksDB.push(task);
+  return getTask(task.id);
+};
+
+const deleteTask = async (boardId, taskId) => {
+  const onBoard = BoardsDB.some(el => el.id === boardId);
+  if (!onBoard) {
+    throw new Error('Board not found');
+  }
+  const idx = TasksDB.findIndex(el => el.id === taskId);
+  if (idx === -1) {
+    throw new Error('Tasks not found');
+  } else {
+    TasksDB.splice(idx, 1);
+    return;
+  }
+};
+
+const updateTask = async (boardId, taskId, task) => {
+  const onBoard = BoardsDB.some(el => el.id === boardId);
+  if (!onBoard) {
+    throw new Error('Board not found');
+  }
+  const idx = TasksDB.findIndex(el => el.id === taskId);
+  if (idx === -1) {
+    throw new Error('Tasks not found');
+  } else {
+    TasksDB[idx] = { id: taskId, ...task };
+    return TasksDB[idx];
   }
 };
 
@@ -77,5 +122,10 @@ module.exports = {
   getBoard,
   createBoard,
   deleteBoard,
-  updateBoard
+  updateBoard,
+  getAllTasks,
+  getTask,
+  createTask,
+  deleteTask,
+  updateTask
 };

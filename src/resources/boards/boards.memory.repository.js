@@ -3,11 +3,11 @@ const DB = require('../../common/RESTDB');
 const getAll = async () => DB.getAllBoards();
 
 const get = async id => {
-  const user = await DB.getBoard(id);
-  if (!user) {
-    throw new Error(`User ${id} not found`);
+  const board = await DB.getBoard(id);
+  if (!board) {
+    throw new Error(`Board ${id} not found`);
   }
-  return user;
+  return board;
 };
 
 const create = async board => DB.createBoard(board);
