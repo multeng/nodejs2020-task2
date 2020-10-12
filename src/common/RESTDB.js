@@ -1,34 +1,81 @@
 const User = require('../resources/users/user.model');
-const DB = [];
+const Board = require('../resources/boards/boards.model');
 
-DB.push(new User(), new User(), new User());
+const UsersDB = [];
+const BoardsDB = [];
+
+UsersDB.push(new User(), new User(), new User());
+BoardsDB.push(new Board(), new Board(), new Board());
+
+// users
 
 const getAllUsers = async () => {
-  return DB.slice(0);
+  return UsersDB.slice(0);
 };
 
-const getUser = async id => DB.filter(el => el.id === id)[0];
+const getUser = async id => UsersDB.filter(el => el.id === id)[0];
 
 const createUser = async user => {
-  DB.push(user);
+  UsersDB.push(user);
   return getUser(user.id);
 };
 
 const deleteUser = async id => {
-  const idx = DB.findIndex(el => el.id === id);
+  const idx = UsersDB.findIndex(el => el.id === id);
   if (idx !== -1) {
-    DB.splice(idx, 1);
+    UsersDB.splice(idx, 1);
   }
 };
 
 const updateUser = async user => {
-  const idx = DB.findIndex(el => el.id === user.id);
+  const idx = UsersDB.findIndex(el => el.id === user.id);
   if (idx === -1) {
     throw new Error('User not found');
   } else {
-    DB[idx] = new User(user);
-    return DB[idx];
+    UsersDB[idx] = new User(user);
+    return UsersDB[idx];
   }
 };
 
-module.exports = { getAllUsers, getUser, createUser, deleteUser, updateUser };
+// boards
+
+const getAllBoards = () => {
+  return BoardsDB.slice(0);
+};
+
+const getBoard = async id => BoardsDB.filter(el => el.id === id)[0];
+
+const createBoard = async board => {
+  BoardsDB.push(board);
+  return getBoard(board.id);
+};
+
+const deleteBoard = async id => {
+  const idx = BoardsDB.findIndex(el => el.id === id);
+  if (idx !== -1) {
+    BoardsDB.splice(idx, 1);
+  }
+};
+
+const updateBoard = async board => {
+  const idx = BoardsDB.findIndex(el => el.id === board.id);
+  if (idx === -1) {
+    throw new Error('Board not found');
+  } else {
+    BoardsDB[idx] = new Board(board);
+    return BoardsDB[idx];
+  }
+};
+
+module.exports = {
+  getAllUsers,
+  getUser,
+  createUser,
+  deleteUser,
+  updateUser,
+  getAllBoards,
+  getBoard,
+  createBoard,
+  deleteBoard,
+  updateBoard
+};
