@@ -3,12 +3,12 @@ const uuid = require('uuid');
 class Task {
   constructor({
     id = uuid(),
-    title = 'title',
-    order = 1,
+    title = 'Title',
+    order,
     description = 'description',
-    userId = 'userId',
-    boardId = 'boardId',
-    columnId = 'columnId'
+    userId,
+    boardId,
+    columnId
   } = {}) {
     this.id = id;
     this.title = title;
