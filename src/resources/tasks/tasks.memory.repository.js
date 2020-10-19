@@ -1,20 +1,44 @@
 const DB = require('../../common/RESTDB');
+const TABLE = 'Tasks';
 
-const getAll = async boardId => DB.getAllTasks(boardId);
+const getAll = async boardId => await DB.getAll(TABLE, { boardId });
+const create = async task => await DB.create(TABLE, task);
 
-const get = async (boardId, taskId) => {
-  const task = DB.getTask(boardId, taskId);
+const get = async (boardId, id) => {
+  const task = await DB.get(TABLE, { boardId, id });
   if (!task) {
-    throw new Error(`Task ${taskId} not found`);
+    throw new Error(`Task ${id} not found`);
   }
   return task;
 };
 
-const create = async task => DB.createTask(task);
+const update = async (boardId, id, task) => {
+  const updatedTask = await DB.update(TABLE, { boardId, id }, task);
+  if (!updatedTask) {
+    throw new Error(`Task ${id} was not update`);
+  }
+  return updatedTask;
+};
 
-const del = async (boardId, taskId) => DB.deleteTask(boardId, taskId);
+const del = async id => {
+  const isDeleted = await DB.del(TABLE, { id });
+  if (!isDeleted) {
+    throw new Error(`Task ${id} was not delete`);
+  }
+};
 
-const update = async (boardId, taskId, task) =>
-  DB.updateTask(boardId, taskId, task);
+const delByField = async (field, value) =>
+  await DB.delMany(TABLE, field, value);
 
-module.exports = { getAll, get, create, del, update };
+const updateByField = async (field, id, value) =>
+  await DB.updateMany(TABLE, field, id, value);
+
+module.exports = {
+  getAll,
+  get,
+  create,
+  del,
+  update,
+  delByField,
+  updateByField
+};
