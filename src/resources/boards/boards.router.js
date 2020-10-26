@@ -1,39 +1,35 @@
 const router = require('express').Router();
+const { OK, NO_CONTENT } = require('http-status-codes');
 const Board = require('./boards.model');
 const boardsService = require('./borads.service');
 
-router.route('/').get(async (req, res) => {
+router.get('/', async (req, res) => {
   const boards = await boardsService.getAll();
-  res.json(boards);
+  await res.status(OK).json(boards.map(Board.toResponse));
 });
 
-router.route('/').post(async (req, res) => {
-  const board = new Board(req.body);
-  const createdBoard = await boardsService.create(board);
-  res.json(createdBoard);
+router.post('/', async (req, res) => {
+  const board = await boardsService.create(req.body);
+  res.status(OK).json(Board.toResponse(board));
 });
 
-router.route('/:id').get(async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const board = await boardsService.get(req.params.id);
-    res.json(board);
+    res.json(Board.toResponse(board));
   } catch (error) {
     res.status(404).send(error.message);
   }
 });
 
-router.route('/:id').put(async (req, res) => {
+router.put('/:id', async (req, res) => {
   const board = await boardsService.update(req.params.id, req.body);
-  res.json(board);
+  await res.status(OK).json(Board.toResponse(board));
 });
 
-router.route('/:id').delete(async (req, res) => {
-  try {
-    await boardsService.del(req.params.id);
-    res.status(204).send('OK');
-  } catch (error) {
-    res.status(404).send(error.message);
-  }
+router.delete('/:id', async (req, res) => {
+  await boardsService.del(req.params.id);
+  res.sendStatus(NO_CONTENT);
 });
 
 module.exports = router;
