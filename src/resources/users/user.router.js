@@ -1,19 +1,19 @@
 const router = require('express').Router();
+const { OK, NO_CONTENT } = require('http-status-codes');
 const User = require('./user.model');
 const usersService = require('./user.service');
 
-router.route('/').get(async (req, res) => {
+router.get('/', async (req, res) => {
   const users = await usersService.getAll();
-  res.json(users.map(User.toResponse));
+  await res.status(OK).json(users.map(User.toResponse));
 });
 
-router.route('/').post(async (req, res) => {
-  const user = new User(req.body);
-  const createdUser = await usersService.create(user);
-  res.json(User.toResponse(createdUser));
+router.post('/', async (req, res) => {
+  const user = await usersService.create(req.body);
+  res.status(OK).json(User.toResponse(user));
 });
 
-router.route('/:id').get(async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const user = await usersService.get(req.params.id);
     res.json(User.toResponse(user));
@@ -22,14 +22,14 @@ router.route('/:id').get(async (req, res) => {
   }
 });
 
-router.route('/:id').put(async (req, res) => {
+router.put('/:id', async (req, res) => {
   const user = await usersService.update(req.params.id, req.body);
-  await res.json(User.toResponse(user));
+  await res.status(OK).json(User.toResponse(user));
 });
 
-router.route('/:id').delete(async (req, res) => {
+router.delete('/:id', async (req, res) => {
   await usersService.del(req.params.id);
-  res.sendStatus(204);
+  res.sendStatus(NO_CONTENT);
 });
 
 module.exports = router;
