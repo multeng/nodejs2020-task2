@@ -1,6 +1,5 @@
-const path = require('path');
 const { createLogger, transports, format } = require('winston');
-const DIR = path.join(__dirname, '../../logs');
+const { DIR } = require('./config');
 
 const logger = createLogger({
   format: format.combine(format.splat(), format.simple()),
