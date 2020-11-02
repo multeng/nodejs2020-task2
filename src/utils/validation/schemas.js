@@ -4,11 +4,7 @@ const schemas = {
   user: Joi.object().keys({
     name: Joi.string().required(),
     login: Joi.string().required(),
-    password: Joi.string()
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[_@$!%*?&])[A-Za-z\d_@$!%*?&]{8,}$/
-      )
-      .required()
+    password: Joi.string().required()
   }),
   board: Joi.object().keys({
     title: Joi.string().required(),
