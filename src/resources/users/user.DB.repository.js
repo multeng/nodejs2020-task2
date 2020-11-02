@@ -16,17 +16,17 @@ const get = async id => {
   return User.findById(id);
 };
 
-const getByLogin = async params => {
-  const user = await User.findOne({ login: params.login });
+const getByLogin = async data => {
+  const user = await User.findOne({ login: data.login });
   if (!user) throw new Error();
-  if (await bcrypt.compare(params.password, user.password)) {
+  if (await bcrypt.compare(data.password, user.password)) {
     const token = await jsonwebtoken.sign(
       { userId: user._id, login: user.login },
       JWT_SECRET_KEY
     );
     return { token };
   }
-  throw new Error('Incorrect login or password!');
+  throw new Error('Incorrect data!');
 };
 
 const del = async id => User.deleteOne({ _id: id });
