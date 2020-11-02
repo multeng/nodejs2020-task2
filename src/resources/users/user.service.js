@@ -13,9 +13,8 @@ const del = async id => {
   await usersRepo.del(id);
 };
 
-const update = async (id, user) => {
-  await usersRepo.update(id, user);
-  return get(id);
-};
+const update = async (id, user) => await usersRepo.update(id, user);
 
-module.exports = { getAll, get, create, del, update };
+const getByLogin = login => usersRepo.getByLogin(login);
+
+module.exports = { getAll, get, create, del, update, getByLogin };
